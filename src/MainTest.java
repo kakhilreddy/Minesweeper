@@ -3,8 +3,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Created by ASUS on 9/25/2016.
+ * Created by AKHIL on 9/25/2016.
  */
+//UNIT TEST IN CONSOLE
 public class MainTest {
    static void print(Board b,int rows,int cols)
     {
