@@ -1,16 +1,19 @@
 import java.util.Random;
 
 /**
- * Created by ASUS on 9/25/2016.
+ * Created by AKHIL on 9/25/2016.
  */
+
+//This class represents Board in the game and does all required backend operations
 public class Board {
-    Cell cell[][];
-    int row;
-    int col;
-    int mineCount;
-    int gameState;
-    int remainingNonMines;
-    int remainingMines;
+    Cell cell[][];  //2D  array of cells
+    int row;  //No of rows in board
+    int col; //No of cols in board
+    int mineCount; //No of mines present in board
+    int gameState; // gameState : -1 game didnt start gameState : 0 - game in progress
+    //gameState : 1 - game won gameState : 2 game lost
+    int remainingNonMines; //remaining cells that are non Mines
+    int remainingMines; // remaining mines in the game
 
     Board(int row,int col,int mineCount)
     {
@@ -20,14 +23,15 @@ public class Board {
         remainingMines=mineCount;
         this.mineCount=mineCount;
         cell=new Cell[row][col];
-        fillBombs(cell,mineCount);
+        fillBombs(cell,mineCount); 
 
         gameState=-1;
         updateNeighbourCountOfCells();
 
 
     }
-    void resetBoard()
+    //To start new game
+   public void resetBoard()
     { gameState=0;
         cell=new Cell[row][col];
 
@@ -35,12 +39,9 @@ public class Board {
         updateNeighbourCountOfCells();
 
     }
-    boolean isMine(int i,int j)
-    {
-        return cell[i][j].isMine;
-    }
-
-    public void updateNeighbourCountOfCells() {
+  
+///Function to find the count of Neighbour mines
+    private void updateNeighbourCountOfCells() {
         for(int i=0;i<row;i++)
             for(int j=0;j<col;j++)
             {
@@ -50,7 +51,7 @@ public class Board {
                 }
             }
     }
-
+//Helper function for updateNeighbourCountOfCells
     private int getCount(int i, int j) {
         int count=0;
         for(int r=i-1;r<=i+1;r++)
@@ -61,7 +62,8 @@ public class Board {
             }
             return  count;
     }
-
+    
+//Function to respond to user clicks and update the game accordingly
     int click(int i,int j)
     {
         if(cell[i][j].isFlag)
@@ -72,16 +74,17 @@ public class Board {
 
         cell[i][j].isOpen=true;
         remainingNonMines--;
-        if(cell[i][j].isMine)
+        if(cell[i][j].isMine) //GameOver
         {
             gameState=2;
             return 2;
         }
-        if(remainingNonMines==0)
+        if(remainingNonMines==0)// successfully completed the game
         {
             gameState=1;
             return 1;
         }
+        // Recursively traverse the board only if the cell is empty -> cell[][].mineCount==0
         if(cell[i][j].mineCount>0)
             return 0;
 
@@ -93,6 +96,8 @@ public class Board {
 
 return 0;
     }
+    
+    // To flag the cell when user right clicks the cell
     void flagIt(int i,int j)
     {
         if(cell[i][j].isFlag) {
@@ -106,36 +111,30 @@ return 0;
 
 
     }
+     //TO check whether the cell[i][j] is flagged or not
     boolean isFlag(int i,int j)
     {
         return cell[i][j].isFlag;
     }
+     //TO check whether the cell[i][j] is already open or not
     boolean isOpen(int i,int j)
     {
         return cell[i][j].isOpen;
     }
-    void printBoard()
+      //TO check whether the cell[i][j] contains mine or not
+    boolean isMine(int i,int j)
     {
-        for(int i=0;i<row;i++) {
-
-            for (int j = 0; j < col; j++)
-                if (cell[i][j].isMine)
-                    System.out.print("* ");
-                else {
-                    if(cell[i][j].mineCount==0)
-                    System.out.print("- ");
-                    else
-                        System.out.print(cell[i][j].mineCount+" ");
-
-                }
-            System.out.println();
-        }
-
+        return cell[i][j].isMine;
     }
-    int getNeighbourCount(int i,int j)
+    
+    //To get no of mines that are neighbour to a cell
+     int getNeighbourCount(int i,int j)
     {
         return cell[i][j].mineCount;
     }
+
+   
+    //Filling bombs randomly 
     void fillBombs(Cell cell[][],int n)
     {
 
@@ -147,15 +146,16 @@ for(int i=1;i<=n;)
     if(cell[x][y]==null)
     {
         i++;
-        cell[x][y]=new Cell(x,y,true);
+        cell[x][y]=new Cell(x,y,true); // creating a cell and setting isMine as true 
     }
 
 
 }
+        
 for(int i=0;i<row;i++)
     for(int j=0;j<col;j++)
         if(cell[i][j]==null)
-            cell[i][j]=new Cell(i,j,false);
+            cell[i][j]=new Cell(i,j,false);// creating a cell and setting isMine as false
 
 
 
